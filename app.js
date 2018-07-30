@@ -8,11 +8,12 @@ const admin = require('./routes/admin/admin');
 const posts = require('./routes/admin/posts');
 //require our database odm
 const mongoose = require('mongoose');
-//to parse our data from a form
-const bodyParser = require('body-parser');
-
 //setting promises
 mongoose.promise = global.promise;
+//to parse our data from a form
+const bodyParser = require('body-parser');
+//setting the methodoverride to be able to use put,patch,etc in the url
+const methodOverride = require('method-override');
 //setting up our port
 const port = 4500;
 
@@ -32,14 +33,20 @@ app.use(express.static(path.join(__dirname,'public')));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
+//using the method override in the middleware
+app.use(methodOverride('_method'));
+
 
 //use routes
 app.use('/',main);
 app.use('/admin',admin);
 app.use('/admin/posts',posts);
 //
+
+const {select} = require('./helpers/handlebars-helpers');
+
 //set view engine
-app.engine('handlebars',exphbs({defaultLayout: 'home'}));
+app.engine('handlebars',exphbs({defaultLayout: 'home' , helpers : {select : select}}));
 app.set('view engine','handlebars');
 
 

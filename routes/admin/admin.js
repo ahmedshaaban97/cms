@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const Post = require('../../models/Post');
+const faker = require('faker');
 
 router.all('/*',(req,res,next)=>{
     req.app.locals.layout = 'admin';
@@ -11,7 +13,27 @@ router.get('/',(req,res)=>{
 });
 
 
+router.post('/generate-fake-posts',(req,res)=>{
+    
+    for (let i =0 ; i <req.body.amount ; i++){
 
+
+        let post = new Post();
+        post.title = faker.name.title();
+        post.status = 'public';
+        post.allowComments = faker.random.boolean();
+        post.description = faker.lorem.sentence();
+
+        post.save().then(saved=>{
+
+        });
+
+
+    }
+
+    res.redirect('/admin/posts');
+    
+});
 
 
 

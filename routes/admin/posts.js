@@ -12,7 +12,11 @@ router.all('/*',(req,res,next)=>{
 
 
 router.get('/',(req,res)=>{
-    res.render('admin/posts/index');
+    // finding all posts and sending them with render to the index view
+    Post.find({}).then(posts=>{
+        res.render('admin/posts/index', {posts : posts});
+    });
+
 });
 
 router.get('/create',(req,res)=>{
@@ -42,11 +46,50 @@ router.post('/create',(req,res)=>{
         res.redirect('/admin/posts');
     }).catch(error=> console.log(error));
 
-
-
-    //console.log(req.body.allowComments);
 });
 
+
+router.get('/edit/:id',(req,res)=>{
+
+    Post.findOne({_id : req.params.id}).then(post=>{
+
+        res.render('admin/posts/edit',{post : post})
+    });
+
+
+});
+
+router.put('/edit/:id',(req,res)=>{
+    Post.findOne({_id : req.params.id}).then(post=>{
+
+        let allowComments = true;
+        if (req.body.allowComments){
+            allowComments = true;
+        } else {
+            allowComments = false;
+        }
+
+        post.title = req.body.title;
+        post.status = req.body.status;
+        post.allowComments = allowComments;
+        post.description = req.body.description;
+
+        post.save().then(updated=>{
+            console.log(updated);
+            res.redirect('/admin/posts');
+        });
+    });
+
+});
+
+
+router.delete('/:id',(req,res)=>{
+
+    Post.remove({_id : req.params.id}).then(result=>{
+        res.redirect('/admin/posts');
+    });
+
+});
 
 
 module.exports = router;
