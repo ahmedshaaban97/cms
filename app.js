@@ -14,6 +14,8 @@ mongoose.promise = global.promise;
 const bodyParser = require('body-parser');
 //setting the methodoverride to be able to use put,patch,etc in the url
 const methodOverride = require('method-override');
+//to upload images to website we use this module
+const upload = require('express-fileupload');
 //setting up our port
 const port = 4500;
 
@@ -25,8 +27,18 @@ mongoose.connect('mongodb://localhost:27017/cms',{ useNewUrlParser: true }).then
 
 
 
-// this alow us to read all the style files stored in the public directory
+// this allow us to read all the style files stored in the public directory
 app.use(express.static(path.join(__dirname,'public')));
+
+
+const {select} = require('./helpers/handlebars-helpers');
+
+//set view engine
+app.engine('handlebars',exphbs({defaultLayout: 'home' , helpers : {select : select}}));
+app.set('view engine','handlebars');
+
+//using the uploasd module
+app.use(upload());
 
 //body parser
 //always put it before the routes or it will not work
@@ -43,11 +55,7 @@ app.use('/admin',admin);
 app.use('/admin/posts',posts);
 //
 
-const {select} = require('./helpers/handlebars-helpers');
 
-//set view engine
-app.engine('handlebars',exphbs({defaultLayout: 'home' , helpers : {select : select}}));
-app.set('view engine','handlebars');
 
 
 
