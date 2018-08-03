@@ -8,6 +8,7 @@ const path = require('path');
 
 
 
+
 router.all('/*',(req,res,next)=>{
     req.app.locals.layout = 'admin';
     next();
@@ -27,7 +28,7 @@ router.get('/create',(req,res)=>{
 });
 
 router.post('/create',(req,res)=>{
-    let fileName = 'no-image.jpeg';
+    let fileName = '';
     if (!isEmpty(req.files)) {
         let file = req.files.file;
         fileName = Date.now() + '-' + file.name;
@@ -57,6 +58,9 @@ router.post('/create',(req,res)=>{
 
     newPost.save().then(savedPost=>{
         console.log(savedPost);
+
+        req.flash('success_massage',`post ${savedPost.title} was created successfully`);
+
         res.redirect('/admin/posts');
     }).catch(error=> console.log(error));
 
@@ -87,9 +91,23 @@ router.put('/edit/:id',(req,res)=>{
         post.status = req.body.status;
         post.allowComments = allowComments;
         post.description = req.body.description;
-        post.file = req.body.file;
+
+
+        if (!isEmpty(req.files)) {
+            let file = req.files.file;
+            let fileName = Date.now() + '-' + file.name;
+            post.file = fileName;
+            file.mv('./public/uploads/' + fileName,(err)=>{
+                if (err) throw err;
+            });
+            // console.log('it is not empty');
+        }
+
+
+
 
         post.save().then(updated=>{
+            req.flash('update_massage',`post ${post.title} was updated successfully`);
             console.log(updated);
             res.redirect('/admin/posts');
         });
@@ -98,18 +116,16 @@ router.put('/edit/:id',(req,res)=>{
 });
 
 
-router.delete('/:id',(req,res)=>{
+router.delete('/:id',(req,res)=> {
 
-    Post.findOne({_id : req.params.id}).then(post=>{
-        fs.unlink(uploadedDir + post.file , (err)=>{
-            if (err) throw err;
+    Post.findOne({_id: req.params.id}).then(post => {
+        fs.unlink(uploadedDir + post.file, (err) => {
+            req.flash('delete_massage',`post ${post.title} was deleted successfully`);
+            post.remove();
+            res.redirect('/admin/posts');
         });
-        Post.remove({_id : req.params.id}).then(err=>{
-            if (err) throw err;
-        });
-        res.redirect('/admin/posts');
+
     });
-
 });
 
 
