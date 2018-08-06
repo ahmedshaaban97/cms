@@ -26,3 +26,24 @@
     </div>
 
 {{/if}}
+
+
+{{#if success_register}}
+    <div class="alert alert-success">
+        {{success_register}}
+    </div>
+{{/if}}
+
+
+{{#if not_matched_passwords}}
+    <div class="alert alert-success">
+        {{not_matched_passwords}}
+    </div>
+{{/if}}
+
+
+{{#if already_user}}
+    <div class="alert alert-danger">
+        {{already_user}}
+    </div>
+{{/if}}
