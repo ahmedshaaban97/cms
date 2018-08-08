@@ -34,6 +34,8 @@ router.get('/about',(req,res)=>{
 });
 
 
+//login users requirment
+
 router.get('/login',(req,res)=>{
     res.render('home/login');
 });
@@ -57,18 +59,20 @@ passport.use(new LocalStrategy({usernameField : 'email'},(email,password,done)=>
 
         });
     });
-
-
-
-
 }));
 
 
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+    User.findById(id, function(err, user) {
+        done(err, user);
+    });
+});
 
 
-
-
-//login users
 router.post('/login',(req,res,next)=>{
     passport.authenticate('local',{
         successRedirect : '/admin',
@@ -128,6 +132,14 @@ router.post('/register',(req,res)=>{
        // res.redirect('/');
     }
 });
+
+
+//logout
+router.get('/logout',(req,res)=>{
+    req.logout();
+    res.redirect('/login')
+});
+
 
 
 

@@ -5,6 +5,7 @@ const Category = require('../../models/Category');
 const {isEmpty , uploadedDir} = require('../../helpers/upload-helpers');
 const fs =require('fs');
 const path = require('path');
+const {userAuthed} = require('../../helpers/auth')
 
 
 
