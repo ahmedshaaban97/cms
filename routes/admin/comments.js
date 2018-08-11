@@ -11,7 +11,7 @@ router.all('/*',(req,res,next)=>{
 
 
 router.get('/',(req,res)=>{
-    Comment.find({}).populate('user').then(comments=>{
+    Comment.find({user : req.user.id}).populate('user').then(comments=>{
 
         res.render('admin/comments',{comments : comments});
     });
@@ -40,9 +40,25 @@ router.post('/:id',(req,res)=>{
 
 router.delete('/:id',(req,res)=>{
     Comment.findOne({_id : req.params.id}).then(comment=>{
-        comment.remove();
-        res.redirect('/admin/comments');
+        comment.remove().then(deletedItem=>{
+
+            Post.findOneAndUpdate({comments: req.params.id}, {$pull : {comments : req.params.id}} ,(err,data)=>{
+                if (err) console.log(err);
+                res.redirect('/admin/comments');
+            });
+
+        });
+
+
+
+        // comment.remove();
+
     });
+});
+
+router.post('/approveComment',(req,res)=>{
+
+    console.log(req.body.approveComment);
 });
 
 

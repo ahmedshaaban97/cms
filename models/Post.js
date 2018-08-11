@@ -4,6 +4,12 @@ const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
 
+    user : {
+        type : Schema.Types.ObjectId,
+        ref : 'users'
+    },
+
+
     category : {
         type : Schema.Types.ObjectId,
         ref :'categories'
@@ -28,6 +34,11 @@ const PostSchema = new Schema({
         type : String,
         required : true
     },
+    hasPhoto : {
+        type : Boolean,
+        required : true
+    },
+
 
     file : {
         type : String

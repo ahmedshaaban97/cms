@@ -11,7 +11,13 @@
 
         <!-- Blog Post -->
         <div class="card mb-4">
+            {{#if hasPhoto}}
             <img class="card-img-top" height="300" width="750" src="/uploads/{{file}}" alt="Card image cap">
+
+            {{else}}
+                <img class="card-img-top" height="300" width="750" src="/default/No_Image_Available.jpg" alt="Card image cap">
+
+            {{/if}}
             <div class="card-body">
                 <h2 class="card-title">{{title}}</h2>
                 <p class="card-text">{{description}}</p>

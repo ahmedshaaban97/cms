@@ -12,6 +12,15 @@ module.exports = {
         }
 
         return true;
+    },
 
+    isFull : function (obj) {
+        for (let key in obj){
+            if (obj.hasOwnProperty(key)){
+                return true;
+            }
+        }
+
+        return false;
     }
 };

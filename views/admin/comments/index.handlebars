@@ -15,6 +15,7 @@
     <tr>
         <th scope="row">{{id}}</th>
         <td>{{user.firstName}}</td>
+        <td><input type="checkbox"  data-id = "{{id}}"  name="approveComment"/></td>
         <td>{{generateDate date 'MMMM Do YYYY'}}</td>
         <td>
             <form action="/admin/comments/{{id}}?_method=DELETE" method="post">

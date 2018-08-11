@@ -41,9 +41,10 @@ app.use(express.static(path.join(__dirname,'public')));
 
 
 const {select,generateDate} = require('./helpers/handlebars-helpers');
+const {isEmpty,isFull} = require('./helpers/upload-helpers');
 
 //set view engine
-app.engine('handlebars',exphbs({defaultLayout: 'home' , helpers : {select : select , generateDate : generateDate}}));
+app.engine('handlebars',exphbs({defaultLayout: 'home' , helpers : {select : select , generateDate : generateDate , isEmpty : isEmpty , isFull : isFull}}));
 app.set('view engine','handlebars');
 
 //using the uploasd module
